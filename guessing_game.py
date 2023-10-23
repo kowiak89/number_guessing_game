@@ -6,6 +6,7 @@ Project 1 - A Number Guessing Game
 
 # Import the random and statistics modules.
 import random, statistics as st
+from unittest.result import failfast
 
 # Create a list of successful attempts to get best record
 records = {"Easy": [], "Medium": [], "Hard": []}
@@ -55,29 +56,36 @@ def start_game(records,game_number):
         try:
             guess = int(input("Pick a number  "))
 
-            if guess > magic_number:
-                outer_limit = guess
-                print(f"Too High! [{lower_limit} - {outer_limit}]")
-                number_of_guesses +=1
+            # Make sure the guess is within the correct range.
+            if guess < lower_limit or guess > outer_limit:
+                print(f"That guess is out of the range of [{lower_limit} - {outer_limit}]")
+                print("Please guess again.")
 
-            elif guess < magic_number:
-                lower_limit = guess
-                print(f"Too Low!  [{lower_limit} - {outer_limit}]")
-                number_of_guesses +=1
             else:
-                print("Yes that is the number I was thinking of!\n")
-                print(f"It took you {number_of_guesses} tries.\n")
-                game_number += 1
-                for k in records:
-                    if records[k] == [0]:
-                        records[k] = []
-                if difficulty == "e":
-                    records["Easy"].append(number_of_guesses)
-                elif difficulty == "m":
-                    records["Medium"].append(number_of_guesses)
+
+                if guess > magic_number:
+                    outer_limit = guess
+                    print(f"Too High! [{lower_limit} - {outer_limit}]")
+                    number_of_guesses +=1
+
+                elif guess < magic_number:
+                    lower_limit = guess
+                    print(f"Too Low!  [{lower_limit} - {outer_limit}]")
+                    number_of_guesses +=1
                 else:
-                    records["Hard"].append(number_of_guesses)
-                break
+                    print("Yes that is the number I was thinking of!\n")
+                    print(f"It took you {number_of_guesses} tries.\n")
+                    game_number += 1
+                    for k in records:
+                        if records[k] == [0]:
+                            records[k] = []
+                    if difficulty == "e":
+                        records["Easy"].append(number_of_guesses)
+                    elif difficulty == "m":
+                        records["Medium"].append(number_of_guesses)
+                    else:
+                        records["Hard"].append(number_of_guesses)
+                    break
         except ValueError:
             print("Your guess must be a number.")
 
@@ -109,6 +117,7 @@ def print_stats(records,game_number):
     print("Mean:   " + str(round(stats["Easy"]["Mean"])) + "        " + str(round(stats["Medium"]["Mean"])) + "        " + str(round(stats["Hard"]["Mean"])))
     print("Median: " + str(round(stats["Easy"]["Median"])) + "        " + str(round(stats["Medium"]["Median"])) + "        " + str(round(stats["Hard"]["Median"])))
     print("Mode:   " + str(round(stats["Easy"]["Mode"])) + "        " + str(round(stats["Medium"]["Mode"])) + "        " + str(round(stats["Hard"]["Mode"])))
+
 
 
 start_game(records,game_number)
