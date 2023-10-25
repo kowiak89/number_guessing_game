@@ -10,10 +10,11 @@ from unittest.result import failfast
 
 # Create a list of successful attempts to get best record
 records = {"Easy": [], "Medium": [], "Hard": []}
+high_score = {"Easy": "", "Medium": "", "Hard": ""}
 game_number = 0
 
 # Create the start_game function.
-def start_game(records,game_number):
+def start_game(records,game_number,high_score):
 
     # Welcome the players to the game
     print("\nWelcome to the Number Guessing Game\n")
@@ -24,7 +25,12 @@ def start_game(records,game_number):
             if records[k] == []:
                 records[k] = [0]
 
-        print("Easy: " + str(min(records["Easy"])) + "  Medium: " + str(min(records["Medium"])) +  "  Hard: " + str(min(records["Hard"])))  
+        print("Easy: " + str(high_score["Easy"]) + " Medium: " +str(high_score["Medium"]) + " Hard: " + str(high_score["Hard"]))  
+    else:
+        print("Easy: N/A Medium: N/A Hard: N/A") 
+        # On game 1 the high scores are set as N/A  
+        for k in high_score:
+            high_score[k] = "N/A" 
 
     # Allow the player to select the difficulty
     difficulty = input("Would you like to play '(e)asy','(m)edium','(h)ard'?  ")
@@ -81,28 +87,31 @@ def start_game(records,game_number):
                             records[k] = []
                     if difficulty == "e":
                         records["Easy"].append(number_of_guesses)
+                        high_score["Easy"] = min(records["Easy"])
                     elif difficulty == "m":
                         records["Medium"].append(number_of_guesses)
+                        high_score["Medium"] = min(records["Medium"])
                     else:
                         records["Hard"].append(number_of_guesses)
+                        high_score["Hard"] = min(records["Hard"])
                     break
         except ValueError:
             print("Your guess must be a number.")
 
     # Call play_again function to ask player if they want to play again
-    print_stats(records,game_number)
-    play_again(game_number)
+    print_stats(records,game_number,high_score)
+    play_again(game_number,records,high_score)
 
 # Create the function to ask the player if they want to play again
-def play_again(game_number):
+def play_again(game_number,records,high_score):
     again = input("\nWould you like to play again? [y/n]\n")
     if again.lower() == "y":
-        start_game(records,game_number)
+        start_game(records,game_number,high_score)
     else:
         print("\nThank you for playing the game!  See you next Time!")
 
 # Create the function to print the game statistics
-def print_stats(records,game_number):
+def print_stats(records,game_number,high_score):
     for k in records:
         if records[k] == []:
             records[k] = [0]
@@ -111,15 +120,16 @@ def print_stats(records,game_number):
         "Medium": {"Mean": st.mean(records["Medium"]), "Median": st.median(records["Medium"]), "Mode": st.mode(records["Medium"])},
         "Hard": {"Mean": st.mean(records["Hard"]), "Median": st.median(records["Hard"]), "Mode": st.mode(records["Hard"])}}
 
-    print("     *** GAME STATISTICS ***")
+    print("          *** GAME STATISTICS ***")
     print(f"Games Played: {game_number}")
-    print("------ Easy -- Medium -- Hard -----")
-    print("Mean:   " + str(round(stats["Easy"]["Mean"])) + "        " + str(round(stats["Medium"]["Mean"])) + "        " + str(round(stats["Hard"]["Mean"])))
-    print("Median: " + str(round(stats["Easy"]["Median"])) + "        " + str(round(stats["Medium"]["Median"])) + "        " + str(round(stats["Hard"]["Median"])))
-    print("Mode:   " + str(round(stats["Easy"]["Mode"])) + "        " + str(round(stats["Medium"]["Mode"])) + "        " + str(round(stats["Hard"]["Mode"])))
+    print("     ------ Easy -- Medium -- Hard -----")
+    print("Mean:        " + str(round(stats["Easy"]["Mean"])) + "        " + str(round(stats["Medium"]["Mean"])) + "        " + str(round(stats["Hard"]["Mean"])))
+    print("Median:      " + str(round(stats["Easy"]["Median"])) + "        " + str(round(stats["Medium"]["Median"])) + "        " + str(round(stats["Hard"]["Median"])))
+    print("Mode:        " + str(round(stats["Easy"]["Mode"])) + "        " + str(round(stats["Medium"]["Mode"])) + "        " + str(round(stats["Hard"]["Mode"])))
+    print("\nHigh Scores: " + str(high_score["Easy"]) + "        " + str(high_score["Medium"]) + "        " + str(high_score["Hard"]))
 
 
 
-start_game(records,game_number)
+start_game(records,game_number,high_score)
 
 
